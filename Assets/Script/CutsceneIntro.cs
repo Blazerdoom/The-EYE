@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 /// Plays an intro over the scene: fade in -> show each frame -> fade out,
 /// then reveals the gameplay underneath. Builds its own full-screen UI, so
@@ -19,6 +20,9 @@ public class CutsceneIntro : MonoBehaviour
 
     [Header("Optional: object to enable when the cutscene finishes (e.g. the EYE ui)")]
     public GameObject revealOnFinish;
+
+    [Header("Optional: load this scene when the cutscene ends (empty = just reveal gameplay)")]
+    public string loadSceneOnFinish = "";
 
     Image _pic;
     Image _black;
@@ -75,6 +79,18 @@ public class CutsceneIntro : MonoBehaviour
             yield return Fade(_pic, 0f, 1f, fadeTime);   // fade the image in
             yield return new WaitForSecondsRealtime(holdTime);
             yield return Fade(_pic, 1f, 0f, fadeTime);   // fade back to black
+        }
+
+        // If asked to, load another scene instead of revealing gameplay.
+        // We keep the screen black and let the next scene fade itself in.
+        if (!string.IsNullOrEmpty(loadSceneOnFinish))
+        {
+            Time.timeScale = 1f;                         // resume time before loading
+            if (SceneFader.Instance != null)
+                SceneFader.Instance.FadeToScene(loadSceneOnFinish);
+            else
+                SceneManager.LoadScene(loadSceneOnFinish);
+            yield break;                                 // leave the black overlay up until the load
         }
 
         yield return Fade(_black, 1f, 0f, fadeTime);     // fade black away -> gameplay
