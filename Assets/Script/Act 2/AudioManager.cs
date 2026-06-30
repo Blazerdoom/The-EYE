@@ -8,9 +8,13 @@ public class AudioManager : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        source.time = 26f;
+        if (source == null) return;
+
+        // Start partway into the track, but never past the clip's length.
+        if (source.clip != null)
+            source.time = Mathf.Min(26f, source.clip.length - 0.1f);
+
         source.Play();
-        
     }
 
     // Update is called once per frame

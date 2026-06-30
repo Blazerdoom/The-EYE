@@ -27,11 +27,6 @@ public class LevelManager : MonoBehaviour
         Debug.Log("Saved! Total Level Restarts: " + currentRestarts);
         string currentScene = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene(currentScene);
-
-        if(Input.GetKey(KeyCode.R))
-        {
-            SceneManager.LoadScene(currentScene);   
-        }
     }
 }
 

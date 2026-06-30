@@ -24,7 +24,7 @@ public class RunningSequence : MonoBehaviour
         _stepTimer -= Time.deltaTime;
         if (_stepTimer <= 0f)
         {
-            GameAudio.Instance.PlayFootstep(footstepClip);
+            if (GameAudio.Instance != null) GameAudio.Instance.PlayFootstep(footstepClip);
             _stepTimer = 0.3f;
         }
 
